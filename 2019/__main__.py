@@ -1,6 +1,7 @@
 #from src.day1 import Day1
 from src.day1 import Day1
 from src.day2 import Day2
+from src.day3 import Day3
 from src.utils.file_util import (
     get_file_path
 )
@@ -8,6 +9,7 @@ from src.utils.file_util import (
 day_dict = {
     1: Day1,
     2: Day2,
+    3: Day3,
 }
 
 def get_day(day):
@@ -17,7 +19,7 @@ def get_day(day):
 
 
 def main():
-    day = 2 # read input
+    day = 3 # read input
     d = get_day(day)
     print(f'Part1: {d.part1()}') 
     print(f'part2: {d.part2()}')
