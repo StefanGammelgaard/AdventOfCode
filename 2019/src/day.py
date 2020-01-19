@@ -11,4 +11,3 @@ class Day(ABC):
     def part2():
         pass
 
-  

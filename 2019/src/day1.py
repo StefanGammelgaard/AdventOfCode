@@ -1,24 +1,28 @@
 import math
-from src.utils.file_util import read_file
+from src.utils.file_util import (
+    read_file_lines,
+)
 from src.day import Day
 
 
 class Day1(Day):
-    def __init__(self):
-        self.file_path = r'inputfiles\\day1.txt'
+    def __init__(self, file_path):
+        self.file_path = file_path
 
     def __calculate_fuel_for_module(self, module):
         return math.trunc(module / 3) - 2
-
-    def calculate_fuel_requirement(self):
+       
+    def part1(self):
         sum = 0
-        for module in read_file(self.file_path, is_generator=True):
+        for module in read_file_lines(self.file_path):
             sum += self.__calculate_fuel_for_module(module)
         return sum
-
-    def part1(self):
-        print(self.calculate_fuel_requirement())
-
+   
+    def part2(self):
+        sum = 0
+        for module in read_file_lines(self.file_path):
+            sum += self.__calculate__fuel_for_module_including_fuel(module, 0)
+        return sum
 
     def __calculate__fuel_for_module_including_fuel(self, module, sum):
         f = self.__calculate_fuel_for_module(module)
@@ -26,13 +30,4 @@ class Day1(Day):
             return sum
         else:
             sum += f
-            return self.__calculate__fuel_for_module_including_fuel(f, sum)
-       
-    def part2(self):
-        sum = 0
-        for module in read_file(self.file_path, is_generator=True):
-            sum += self.__calculate__fuel_for_module_including_fuel(module, 0)
-        print(sum)
-
-
-    
+            return self.__calculate__fuel_for_module_including_fuel(f, sum)    
