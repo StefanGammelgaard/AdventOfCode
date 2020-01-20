@@ -5,14 +5,21 @@ from src.utils.file_util import (
 from .day import Day
 
 class Point():
-    def __init__(self, x, y):
+    def __init__(self, x, y, steps):
         self.x = x
         self.y = y
-        self.distance = self.distance_to_central_port()
+        self.steps = steps
+    
+    def manhatten_distance(self):
+        return abs(self.x) + abs(self.y)
 
-    def distance_to_central_port(self):
-        return abs(abs(self.x) + abs(self.y))
+    #https://stackoverflow.com/questions/1227121/compare-object-instances-for-equality-by-their-attributes
+    # See the first answer
+    def __eq__(self, other):
+        return self.x == other.x and self.y == other.y
 
+    def __hash__(self):
+        return hash((self.x, self.y))
 
 class Day3(Day):
     def __init__(self, file_path):
@@ -21,52 +28,47 @@ class Day3(Day):
     def get_wire_input(self):
         return read_file_delimited(self.file_path, [','], convert_int=False)
 
-    def check_for_intersection(self, points, new_pos):
-        for point in points:
-            if point.x == new_pos.x and point.y == new_pos.y:
-                return True
-        return False
-        
-    def part1(self):
-        
+    def get_points(self, wire_input):
+        points = set()
+        cur_pos = Point(0, 0, 0)
+        for dir in wire_input:                
+            d = dir[0]
+            steps = int(dir[1:])
+            s = 0
+            for _ in range(steps):
+                if d == 'R':
+                    cur_pos.x += 1
+                if d == 'L':
+                    cur_pos.x -= 1
+                if d == 'D':
+                    cur_pos.y -= 1
+                if d == 'U':
+                    cur_pos.y += 1
+                s += 1
+                points.add(Point(cur_pos.x, cur_pos.y, s))
+        return points
+    
+    def get_intersections(self):
         wire_input = self.get_wire_input()
+        sets = []
         for input in wire_input:
-            points = []
-            intersections = []
-            # USE SET
-            cur_pos = Point(0, 0)
-            for dir in input:                
-                d = dir[0]
-                steps = int(dir[1:])
-                for x in range(steps):
-                    if d == 'R':
-                        cur_pos.x += 1
-                    if d == 'L':
-                        cur_pos.x -= 1
-                    if d == 'D':
-                        cur_pos.y -= 1
-                    if d == 'U':
-                        cur_pos.y += 1
-                    #print(f'Cur pos x {cur_pos.x}, y : {cur_pos.y}')
-                    if self.check_for_intersection(points, cur_pos):
-                        intersections.append(Point(cur_pos.x, cur_pos.y))
-                    else:
-                        points.append(Point(cur_pos.x, cur_pos.y))
-                    #if not self.check_for_intersection(points, cur_pos):
-                        #points.append(cur_pos)
-                    #else:
-                    #    intersections.append(cur_pos)
-        #print(intersections)
-            m = min(intersections, key=lambda x: x.distance)
-            print(m.distance)
-            #print(min(intersections, key=lambda x: x.distance).distance)
-            #print(len(intersections))
-        #for inter in intersections:
+            sets.append(self.get_points(input))
+        return sets[0].intersection(sets[1])
 
-            #print(inter.distance_to_central_port())
 
-                
-
+    # Result should be 1285
+    def part1(self):
+        return min(self.get_intersections(), key=lambda point: point.manhatten_distance()).manhatten_distance()
 
     def part2(self):
-        pass
+        intersections = self.get_intersections()
+        # cant index in sets!
+        limit = len(intersections)
+        cur_best = 99999
+        for i, intersection in enumerate(intersections):
+            if limit - 1 == i:
+                break
+            if steps := intersection.steps + intersection[i + 1].steps < cur_best:
+                cur_best = steps
+        return cur_best
+            
