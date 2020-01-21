@@ -21,6 +21,7 @@ def get_day(day):
 def main():
     day = 3 # read input
     d = get_day(day)
+    #d.test()
     print(f'Part1: {d.part1()}') 
     print(f'part2: {d.part2()}')
 

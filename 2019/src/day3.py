@@ -5,7 +5,7 @@ from src.utils.file_util import (
 from .day import Day
 
 class Point():
-    def __init__(self, x, y, steps):
+    def __init__(self, x = 0, y = 0, steps = 0):
         self.x = x
         self.y = y
         self.steps = steps
@@ -21,6 +21,7 @@ class Point():
     def __hash__(self):
         return hash((self.x, self.y))
 
+
 class Day3(Day):
     def __init__(self, file_path):
         self.file_path = file_path
@@ -30,11 +31,11 @@ class Day3(Day):
 
     def get_points(self, wire_input):
         points = set()
-        cur_pos = Point(0, 0, 0)
+        cur_pos = Point()
+        s = 0
         for dir in wire_input:                
             d = dir[0]
             steps = int(dir[1:])
-            s = 0
             for _ in range(steps):
                 if d == 'R':
                     cur_pos.x += 1
@@ -53,22 +54,33 @@ class Day3(Day):
         sets = []
         for input in wire_input:
             sets.append(self.get_points(input))
-        return sets[0].intersection(sets[1])
-
+        return sets[0], sets[1], sets[0].intersection(sets[1])
 
     # Result should be 1285
     def part1(self):
-        return min(self.get_intersections(), key=lambda point: point.manhatten_distance()).manhatten_distance()
+        set1, set2, intersection = self.get_intersections()
+        return min(intersection, key=lambda point: point.manhatten_distance()).manhatten_distance()
 
     def part2(self):
-        intersections = self.get_intersections()
-        # cant index in sets!
-        limit = len(intersections)
-        cur_best = 99999
-        for i, intersection in enumerate(intersections):
-            if limit - 1 == i:
-                break
-            if steps := intersection.steps + intersection[i + 1].steps < cur_best:
-                cur_best = steps
-        return cur_best
+        set1, set2, intersections = self.get_intersections()
+        # Check which point from set1 is in the intersection
+        p1 = []
+        for p in set1:
+            if p in intersections:
+                p1.append(p)
+        # Check which points from set2 in the intersection
+        p2 = []
+        for p in set2:
+            if p in intersections:
+                p2.append(p)
+        tups = []
+        for p in p1:
+            for pp in p2:
+                if p == pp:
+                    tups.append((p, pp))
+
+        # Answer should be 14228
+        m = min(tups, key=lambda tup: tup[0].steps + tup[1].steps)
+        return m[0].steps + m[1].steps
+        
             
