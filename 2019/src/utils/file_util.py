@@ -8,7 +8,7 @@ def read_file_lines(file_path : str) -> int:
         while line := f.readline():
             yield int(line)
 
-def read_file_delimited(file_path : str, delimeters : list) -> list:
+def read_file_delimited(file_path : str, delimeters : list, convert_int = True) -> list:
     """[summary]
     Yields each line as a list of strings
     
@@ -22,6 +22,8 @@ def read_file_delimited(file_path : str, delimeters : list) -> list:
     pattern = '|'.join(map(re.escape, delimeters))
     with open(file_path, 'r') as f:
         while line := f.readline():
-            yield list(map(int, re.split(pattern, line)))
-
+            if convert_int:
+                yield list(map(int, re.split(pattern, line)))
+            else:
+                yield re.split(pattern, line)
         
