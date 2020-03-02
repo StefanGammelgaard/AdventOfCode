@@ -24,7 +24,7 @@ def main():
     day = 4 # read input
     d = get_day(day)
     #d.test()
-    print(f'Part1: {d.part1()}') 
+    #print(f'Part1: {d.part1()}') 
     print(f'part2: {d.part2()}')
 
 if __name__ == "__main__":
