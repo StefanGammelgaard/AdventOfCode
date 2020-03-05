@@ -13,7 +13,7 @@ answer_dict = {
     2: (3101878, 8444),
     3: (1285, 14228),
     4: (1955, 1319),
-    5: (13346482, 0),
+    5: (13346482, 12111395),
 }
 1
 day_dict = {
@@ -46,6 +46,7 @@ def main():
     d = get_day(day)
     print(f'Part1: {d.part1()}') 
     print(f'part2: {d.part2()}')
+
 
 
 if __name__ == "__main__":

@@ -16,27 +16,63 @@ class IntcodeProgram:
     def run_program(self, initial_override = { }):
         for k, v in initial_override.items():
             self.program[k] = v
+        output = 0
+        try:
+            while self.pc < len(self.program):
+                #print(self.pc, '---', len(self.program))
+                op = str(self.program[self.pc])
+                while len(op) < 5:
+                    op = '0' + op
+                instruction = op[-1]
+                p1, p2, p3 = self.get_params(op)
 
-        while True:
-            op = str(self.program[self.pc])
-            while len(op) < 5:
-                op = '0' + op
-            instruction = op[-1]
-            p1, p2, p3 = self.get_params(op)
+                if instruction == '1':
+                    self.program[p3] = self.program[p1] + self.program[p2]
+                    self.pc += 4
 
-            if instruction == '1':
-                self.program[p3] = self.program[p1] + self.program[p2]
-                self.pc += 4
-            if instruction == '2':
-                self.program[p3] = self.program[p1] * self.program[p2]
-                self.pc += 4
-            if instruction == '3':
-                print('Enter input...')
-                inp = input()
-                self.program[p1] = int(inp)
-                self.pc += 2
-            if instruction == '4':
-                print('Output ->', self.program[p1])
-                self.pc += 2         
-            if instruction == '99':
-                break
+                if instruction == '2':
+                    self.program[p3] = self.program[p1] * self.program[p2]
+                    self.pc += 4
+
+                if instruction == '3':
+                    print('Enter input...')
+                    inp = input()
+                    self.program[p1] = int(inp)
+                    self.pc += 2
+
+                if instruction == '4':
+                    #print('Output ->', self.program[p1])
+                    output = self.program[p1]
+                    self.pc += 2         
+
+                if instruction == '5':
+                    if self.program[p1] != 0:
+                        self.pc = self.program[p2]
+                    else:
+                        self.pc += 3
+                        
+                if instruction == '6':
+                    if self.program[p1] == 0:
+                        self.pc = self.program[p2]
+                    else:
+                        self.pc += 3
+
+                if instruction == '7':
+                    if self.program[p1] < self.program[p2]:
+                        self.program[p3] = 1
+                    else:
+                        self.program[p3] = 0
+                    self.pc += 4
+
+                if instruction == '8':
+                    if self.program[p1] == self.program[p2]:
+                        self.program[p3] = 1
+                    else:
+                        self.program[p3] = 0
+                    self.pc += 4
+                if instruction == '9':
+                    return output             
+        except Exception as e:
+            #print(e)
+            return output
+        
