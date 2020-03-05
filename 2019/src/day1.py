@@ -16,12 +16,14 @@ class Day1(Day):
         sum = 0
         for module in read_file_lines(self.file_path):
             sum += self.__calculate_fuel_for_module(module)
+        assert sum == 3520097
         return sum
    
     def part2(self):
         sum = 0
         for module in read_file_lines(self.file_path):
             sum += self.__calculate__fuel_for_module_including_fuel(module, 0)
+        assert sum == 5277255
         return sum
 
     def __calculate__fuel_for_module_including_fuel(self, module, sum):
