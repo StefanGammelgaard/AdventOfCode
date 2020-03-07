@@ -6,9 +6,11 @@ def get_file_path(day):
 def read_file_lines(file_path : str, convert_int = True) -> int:
     with open (file_path, 'r') as f:
         while line := f.readline():
+            line = line.rstrip()
             if convert_int:
                 yield int(line)
-            yield line
+            else:
+                yield line
 
 def read_file_delimited(file_path : str, delimeters : list, convert_int = True) -> list:
     """[summary]

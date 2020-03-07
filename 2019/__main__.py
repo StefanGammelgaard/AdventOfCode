@@ -15,7 +15,7 @@ answer_dict = {
     3: (1285, 14228),
     4: (1955, 1319),
     5: (13346482, 12111395),
-    6: (0, 0)
+    6: (140608, 337)
 }
 1
 day_dict = {
@@ -41,7 +41,6 @@ def run_all_days():
                 print(repr(err))
             
 
-
 def get_day(day):
     file_path = get_file_path(day)
     d = day_dict.get(day, None)
@@ -50,11 +49,11 @@ def get_day(day):
 
 
 def main():
-    #run_all_days()
+    run_all_days()
     #return
     day = 6 # read input
     d = get_day(day)
-    #print(f'Part1: {d.part1()}') 
+    print(f'Part1: {d.part1()}') 
     #print(d.part1())
     print(f'part2: {d.part2()}')
 

@@ -5,7 +5,6 @@ class MapItem:
     def __init__(self, name):
         # List of other MapItems
         self.name = name
-        self.prev = None # Points to the previous node
         self.orbitees = []
         
 
@@ -19,7 +18,7 @@ class Day6(Day):
     def create_orbit_dict(self):
         orbit_dict = { }
         for orbit in self.orbits:
-            a, o = self.get_hmm(orbit)
+            a, o = self.split_orbit(orbit)
             if a not in orbit_dict.keys():
                 orbit_dict[a] = MapItem(a)
             if o not in orbit_dict.keys():
@@ -27,11 +26,9 @@ class Day6(Day):
             attractor = orbit_dict.get(a)
             orbitee = orbit_dict.get(o)
             attractor.orbitees.append(orbitee)
-            orbitee.prev = attractor
-            b = 3
         return orbit_dict
 
-    def get_hmm(self, o):
+    def split_orbit(self, o):
         s = o.split(')')
         # 0 = attractor, 1 = orbiter
         return s[0], s[1]
@@ -47,72 +44,62 @@ class Day6(Day):
                 self.count(v)
         return self.total
 
-    def check_orbitees(self, o, paths, cur_path, target):
-        if len(o.orbitees) == 0 and o.name not in ['SAN', 'YOU']:
-            return
-        cur_path.add(o.name)
-        #print('Checking orbits for:', o.name)
-        if o.name == target:
-            print('lol')
-            print(cur_path)
-            paths.add(''.join(cur_path))
-            print(paths)
-            #return cur_path
+    def check_orbitee(self, o, cp, vp):
+        if len(o.orbitees) == 0:
+            # If its a dead end, we can just return
+            if o.name not in ['YOU', 'SAN']:
+                return
+            # We have found a valid path
+            else:
+                cp.append(o.name)
+                vp.append(cp)
+                return
+        else:
+            # Check orbitees of planet
+            cp.append(o.name)
+            for os in o.orbitees:
+                self.check_orbitee(os, cp[:], vp)
+
+                
+    def check_node(self, o, cp, vp):
         for os in o.orbitees:
-            cp = cur_path.copy()
-            cp.add(os.name)
-            self.check_orbitees(os, paths, cp, target)
-            
-    def check_node(self, o, target):
-        for os in o.orbitees:
-            cp = set()
-            cp.add(o.name)
-            self.check_orbitees(os, set(), cp, target)
-#            valid, p = self.check_orbitees(os, set(), set())
-    
-    """
-    This could done a lot easier without doing recursion backwards
-    """
+            self.check_orbitee(os, cp, vp)
+
     def part2(self):
+        """
+        """
         orbit_dict = self.create_orbit_dict()
-
+        # We start at node 'COM' and work our way from there towards our targets 'SAN' and 'YOU'
         start = orbit_dict.get('COM')
-        self.check_node(start, 'SAN')
-        self.check_node(start, 'YOU')
+        current_path = []
+        valid_paths = []
+        self.check_node(start, current_path, valid_paths)
 
-        # We start at our location
-        #start = orbit_dict.get('YOU')
-        #valid_paths = []
-        #invalid = set()
-        #self.check_node(start, set(), invalid)
-        #print('Invalid', invalid)
-        #for o in start.prev.orbitees:
-        #    self.check_node(o, set())
+        y_p = None
+        s_p = None
+        # Valid_paths contains the paths to our targets
+        # Valid paths could be made into a dict instead of this
+        for p in valid_paths:
+            if 'SAN' in p:
+                s_p = p[:]
+                s_p.remove('SAN')
+            if 'YOU' in p:
+                y_p = p[:]
+                y_p.remove('YOU')
+        # Not very memory efficient since we are copying the list at each loop            
+        while y_p[0] == s_p[0]:
+            y_p = y_p[1:]
+            s_p = s_p[1:]
 
-
-
-
-
-
-
-
-        #ll = self.check_prev(start.prev, set(), set())
-        #print(ll)
-        # Start with prev of ourself.
-        found = False
-        #print(start.prev.orbitees)
+        """
+        What could be done:
+        return len(y_p) + len(s_p)
+        But that is technically not correct!
+        Because for each path, the number of 'jumps' is equal = #planets - 1
+        Meaning is should be len(y_p) - 1 + len(s_p) - 1
+        But since we are deleting the planet where the two paths diverse in the while loop, 
+        we are actually deleting two jumps at that point.
+        So...
+        """
+        return len(y_p) - 1 + len(s_p) - 1 + 2
         
-        #for o in start.prev.orbitees:
-            #self.check_orbitee(o.prev)
-            #print('Check:', o.name)
-            #self.check_orbitee(o)
-            # self.check_orbitee(o.prev)
-            #print(o)
-        
-        # Check if any orbitees contains our target:
-        
-
-        
-        
-        
-
