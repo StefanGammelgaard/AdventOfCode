@@ -54,9 +54,9 @@ def main():
     #return
     day = 6 # read input
     d = get_day(day)
-    print(f'Part1: {d.part1()}') 
+    #print(f'Part1: {d.part1()}') 
     #print(d.part1())
-    #print(f'part2: {d.part2()}')
+    print(f'part2: {d.part2()}')
 
 
 
