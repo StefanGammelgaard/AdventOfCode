@@ -17,7 +17,7 @@ class Day2(Day):
         # NOTE the input file is only 1 line, hence only 1 p
         for values in intcode_program_input:
             p = IntcodeProgram(values)
-            return p.run_program(initial_overrides, True)
+            return p.run_program(initial_overrides, return_index_zero=True)
     
     def part2(self):
         for noun in range(100):
@@ -29,5 +29,5 @@ class Day2(Day):
                 intcode_program_input = self.get_intcode_input()
                 for values in intcode_program_input:
                     p = IntcodeProgram(values)
-                    if p.run_program(initial_overrides, True) == 19690720:
+                    if p.run_program(initial_overrides, return_index_zero=True) == 19690720:
                         return 100 * noun + verb

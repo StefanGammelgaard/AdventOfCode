@@ -5,6 +5,7 @@ from src.day3 import Day3
 from src.day4 import Day4
 from src.day5 import Day5
 from src.day6 import Day6
+from src.day7 import Day7
 from src.utils.file_util import (
     get_file_path
 )
@@ -15,7 +16,8 @@ answer_dict = {
     3: (1285, 14228),
     4: (1955, 1319),
     5: (13346482, 12111395),
-    6: (140608, 337)
+    6: (140608, 337),
+    7: (273814, 0)
 }
 1
 day_dict = {
@@ -25,6 +27,7 @@ day_dict = {
     4: Day4,
     5: Day5,
     6: Day6,
+    7: Day7,
 }
 
 def run_all_days():
@@ -49,9 +52,9 @@ def get_day(day):
 
 
 def main():
-    run_all_days()
+    # run_all_days()
     #return
-    day = 6 # read input
+    day = 7 # read input
     d = get_day(day)
     print(f'Part1: {d.part1()}') 
     #print(d.part1())
